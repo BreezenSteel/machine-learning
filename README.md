@@ -1,77 +1,185 @@
-🚗 Car Evaluation Classification Analysis
+# 🚗 Car Evaluation Classification Analysis
 
-Proyek ini bertujuan untuk melakukan klasifikasi kelayakan mobil menggunakan dataset Car Evaluation dari UCI Machine Learning Repository. Analisis ini membandingkan performa model XGBoost dan Random Forest yang dioptimalkan menggunakan teknik Metaheuristic Particle Swarm Optimization (PSO) untuk pencarian hyperparameter.
+Proyek ini bertujuan untuk melakukan klasifikasi kelayakan mobil menggunakan dataset **Car Evaluation** dari **UCI Machine Learning Repository**. Analisis ini membandingkan performa model **XGBoost** dan **Random Forest** yang dioptimalkan menggunakan teknik metaheuristik **Particle Swarm Optimization (PSO)** untuk pencarian hyperparameter terbaik.
 
-📊 Dataset Information
+---
+
+## 📊 Dataset Information
 
 Dataset ini merupakan model keputusan hierarkis yang dikembangkan untuk mengevaluasi mobil berdasarkan karakteristik teknisnya.
 
-Link Dataset: UCI Machine Learning Repository - Car Evaluation
+- **Dataset Source**: Car Evaluation – UCI Machine Learning Repository  
+- **Target Variable**: `unacc`, `acc`, `good`, `vgood`
+- **Features**:
+  - `buying`
+  - `maint`
+  - `doors`
+  - `persons`
+  - `lug_boot`
+  - `safety`
 
-Target Variable: unacc, acc, good, vgood.
+Dataset ini bersifat kategorikal penuh dan sangat cocok untuk permasalahan klasifikasi multi-class.
 
-Fitur: buying, maint, doors, persons, lug_boot, safety.
+---
 
-🛠️ Key Features & Methodology
+## 🛠️ Methodology
 
-Exploratory Data Analysis (EDA): Visualisasi distribusi fitur dan korelasi antar variabel.
+### 1. Exploratory Data Analysis (EDA)
 
-Preprocessing: - Menggunakan Ordinal Encoding untuk mengubah data kategorikal menjadi numerik sesuai urutan tingkatannya.
+Dilakukan visualisasi distribusi fitur dan analisis hubungan antar variabel untuk memahami karakteristik data sebelum pemodelan.
 
-Penanganan data tidak seimbang (Imbalanced Data) menggunakan SMOTE (Synthetic Minority Over-sampling Technique).
+### 2. Data Preprocessing
 
-Hyperparameter Tuning (PSO): Implementasi algoritma metaheuristik Particle Swarm Optimization untuk menemukan parameter terbaik bagi XGBoost dan Random Forest secara efisien.
+Karena seluruh fitur bersifat kategorikal ordinal, digunakan:
 
-Performance Comparison: Pengujian dilakukan pada dua skenario data split:
+- **Ordinal Encoding** untuk mengubah kategori menjadi numerik berdasarkan tingkatannya
 
-80% Training : 20% Testing
+Contoh:
+- `buying`: low < med < high < vhigh
+- `safety`: low < med < high
 
-70% Training : 30% Testing
+### 3. Handling Imbalanced Data
 
-💻 Tech Stack
+Dataset memiliki ketidakseimbangan kelas yang cukup tinggi, terutama dominasi kelas:
 
-Bahasa: Python
+- `unacc` (~70%)
 
-Library Utama:
+Untuk mengatasi hal tersebut digunakan:
 
-Scikit-Learn: Evaluasi model dan preprocessing.
+- **SMOTE (Synthetic Minority Over-sampling Technique)**
 
-XGBoost: Gradient boosting framework.
+Tujuannya agar model tidak bias terhadap kelas mayoritas dan mampu mengenali kelas minoritas seperti `good` dan `vgood`.
 
-PySwarms: Library khusus untuk optimasi PSO.
+### 4. Hyperparameter Optimization using PSO
 
-Imbalanced-Learn (SMOTE): Penyeimbangan kelas target.
+Optimasi parameter dilakukan menggunakan:
 
-Pandas & Numpy: Manipulasi data.
+- **Particle Swarm Optimization (PSO)**
 
-Matplotlib & Seaborn: Visualisasi data.
+PSO digunakan untuk mencari kombinasi hyperparameter terbaik secara efisien tanpa exhaustive search seperti Grid Search.
 
-🚀 Pipeline Analisis
+Model yang dioptimasi:
 
-Tahap 1: Memuat data dan melakukan encoding pada fitur kategorikal.
+- **XGBoost**
+- **Random Forest**
 
-Tahap 2: Melakukan oversampling dengan SMOTE untuk mengatasi dominasi kelas unacc (70%).
+Fungsi objektif PSO menggunakan:
 
-Tahap 3: Mendefinisikan fungsi objektif untuk PSO (berdasarkan akurasi Cross-Validation).
+- **Cross Validation Accuracy**
 
-Tahap 4: Menjalankan optimasi PSO untuk mendapatkan kombinasi parameter terbaik.
+### 5. Performance Evaluation
 
-Tahap 5: Melatih model final dan mengevaluasi menggunakan Confusion Matrix dan Classification Report.
+Pengujian dilakukan pada dua skenario split data:
 
-📈 Temuan Utama (Findings)
+- **80% Training : 20% Testing**
+- **70% Training : 30% Testing**
 
-Berdasarkan hasil eksekusi kodingan:
+Evaluasi model menggunakan:
 
-Pentingnya Fitur: Fitur safety ditemukan sebagai variabel yang paling berpengaruh terhadap penentuan kelayakan mobil pada kedua model.
+- Accuracy Score
+- Confusion Matrix
+- Classification Report
+- Feature Importance
 
-Efektivitas PSO: Optimasi PSO berhasil menemukan hyperparameter optimal yang memberikan akurasi sangat tinggi tanpa perlu melakukan exhaustive grid search.
+---
 
-Stabilitas Model: Baik XGBoost maupun Random Forest menunjukkan performa yang stabil, namun terdapat sedikit perbedaan akurasi pada variasi split data (80:20 vs 70:30).
+## 💻 Tech Stack
 
-Data Balancing: Tanpa SMOTE, model cenderung bias terhadap kelas mayoritas. Penggunaan SMOTE secara signifikan meningkatkan kemampuan model dalam mendeteksi kelas minoritas (vgood dan good).
+### Language
 
-📋 Citation
+- Python
 
-Bohanec, M. (1988). Car Evaluation [Dataset]. UCI Machine Learning Repository. https://www.google.com/search?q=https://doi.org/10.24432/C5JP48.
+### Main Libraries
 
-Dibuat untuk keperluan analisis data dan riset machine learning.
+- **Scikit-Learn** → preprocessing, evaluasi model
+- **XGBoost** → gradient boosting framework
+- **PySwarms** → optimasi PSO
+- **Imbalanced-Learn (SMOTE)** → penanganan data tidak seimbang
+- **Pandas & NumPy** → manipulasi data
+- **Matplotlib & Seaborn** → visualisasi data
+
+---
+
+## 🚀 Analysis Pipeline
+
+### Tahap 1
+
+Memuat dataset dan melakukan encoding pada fitur kategorikal menggunakan ordinal encoding.
+
+### Tahap 2
+
+Melakukan oversampling menggunakan SMOTE untuk mengatasi dominasi kelas mayoritas.
+
+### Tahap 3
+
+Mendefinisikan fungsi objektif PSO berdasarkan akurasi cross-validation.
+
+### Tahap 4
+
+Menjalankan optimasi PSO untuk mendapatkan kombinasi hyperparameter terbaik pada:
+
+- XGBoost
+- Random Forest
+
+### Tahap 5
+
+Melatih model final menggunakan parameter terbaik dan mengevaluasi performanya menggunakan confusion matrix dan classification report.
+
+---
+
+## 📈 Main Findings
+
+### 🔹 Pentingnya Fitur
+
+Fitur **safety** ditemukan sebagai variabel yang paling berpengaruh dalam menentukan kelayakan mobil pada kedua model.
+
+Hal ini menunjukkan bahwa tingkat keamanan menjadi faktor utama dalam proses evaluasi kendaraan.
+
+### 🔹 Efektivitas PSO
+
+Optimasi menggunakan **Particle Swarm Optimization (PSO)** berhasil menemukan hyperparameter optimal dengan akurasi sangat tinggi tanpa memerlukan exhaustive grid search yang lebih mahal secara komputasi.
+
+### 🔹 Stabilitas Model
+
+Baik **XGBoost** maupun **Random Forest** menunjukkan performa yang stabil pada kedua skenario split data:
+
+- 80:20
+- 70:30
+
+Meskipun terdapat sedikit perbedaan akurasi, kedua model tetap memberikan hasil klasifikasi yang sangat baik.
+
+### 🔹 Pengaruh SMOTE
+
+Tanpa SMOTE, model cenderung bias terhadap kelas mayoritas (`unacc`).
+
+Setelah dilakukan oversampling menggunakan SMOTE, performa model meningkat secara signifikan terutama dalam mendeteksi kelas minoritas seperti:
+
+- `good`
+- `vgood`
+
+---
+
+## 📋 Citation
+
+Bohanec, M. (1988).  
+**Car Evaluation Dataset**.  
+UCI Machine Learning Repository.
+
+DOI: https://doi.org/10.24432/C5JP48
+
+---
+
+## 📌 Purpose
+
+Proyek ini dibuat untuk keperluan:
+
+- Analisis data
+- Penelitian machine learning
+- Perbandingan algoritma klasifikasi
+- Implementasi metaheuristic optimization pada hyperparameter tuning
+
+---
+
+## 👨‍💻 Author
+
+Dibuat untuk keperluan riset dan pengembangan analisis klasifikasi berbasis machine learning.
